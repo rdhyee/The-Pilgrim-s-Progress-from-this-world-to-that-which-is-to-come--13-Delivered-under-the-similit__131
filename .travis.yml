@@ -1,0 +1,61 @@
+sudo: required
+dist: trusty
+language: ruby
+
+before_install:
+before_install:
+- gem install asciidoctor -v 1.5.2
+- gem install tilt
+- sudo pip install git+https://github.com/rdhyee/gitberg.git
+- sudo pip install pillow
+- sudo pip install cssutils
+- sudo pip install docutils
+- sudo pip install roman
+- sudo pip install git+git://github.com/rdhyee/pg-epubmaker.git
+script:
+- VERSION=`ruby -e "require 'yaml'; meta = YAML.load_file('metadata.yaml'); puts meta['_version'];"`
+- git clone https://github.com/gitenberg-dev/asciidoctor-htmlbook.git
+- sudo pip install -r asciidoctor-htmlbook/gitberg-machine/requirements.txt
+
+- /usr/bin/python -c "from gitenberg import travis; travis.build_epub()"
+- ebook-convert book.epub book.mobi
+- xvfb-run ebook-convert book.epub book.pdf
+branches:
+  only:
+  - master
+notifications:
+  webhooks:
+    urls:
+      - https://unglue.it/api/travisci/webhook
+    on_success: always
+    on_failure: never
+    on_start: never
+deploy:
+  skip_cleanup: true
+  provider: releases
+  api_key:
+    secure: Zr2R65C/mA12xnA5GRqQaWpNHNTBZozvw7qoWkjnQA9dvuWtbMphIgqTSYsXnvekEcVn8Z4b2zI6GAPyW9tBZpPBn907TrLS2C2W/oscbf4C0c05N0nb4NS7pYlntiKw7tZRnLEPsGne96WoYvvr9EPMSjJzvdb35csivHu5V+Y4Es7Wip/qYy+vUQvAYBqWezZtqWHaM85D8x9fSzXIhTkArqpaJPEQexpIehy3ybao8nLPdE/UcKYHQg6AxvV9UYyefXv/9TF1YGCNg4kqSbKi2DM568G+V2X1BKSjJ8TY4Squ2HzmdJC6rKeVoIY+gbeyP3MN+iA17RWibm+CF2IPaYrMfJe1phwXldjZUcdqXpr46huu3tviMoo5m3IJxPzWmcHmvptvrz9+q8ltaqVSaF1hz/sugr4gay94l1n+ZjNhIuJagU9KH9bohMBvuX9HzvzTDKE36dYzm8Il5Gq1qzicF9dEv8ibZqVaaGaT0MSZy8LzsvrEhc2cLX1Zlc6UmfAAFy/0yM6Ap7BBDjCRPRkfG45isy6bOj5rsVMLMiKk/3maS48RN9x9AXv7mIfpyOJCalp9I9izrL7EFcp+3ovN9+BjtIxoPOd7JsJMXANnCOTcYirMp6GySVZe2Xr3xCJRprg9Jb2GRNilOwMxrUlLBzUrxWcKpeLolFU=
+  file:
+    - book.epub
+    - book.mobi
+    - book.pdf
+  "on":
+    repo: rdhyee/The-Pilgrim-s-Progress-from-this-world-to-that-which-is-to-come-Delivered-under-the-similitude-__131
+addons:
+  apt:
+    packages:
+    - xsltproc
+    - xvfb
+    - calibre
+    - python-pip
+    - git
+    - python-dev
+    - libjpeg-dev
+    - libpng-dev
+    - libfreetype6
+    - libfreetype6-dev
+    - zlib1g-dev
+    - python-lxml
+    - libxml2-dev
+    - libxslt1-dev
+    - tidy
