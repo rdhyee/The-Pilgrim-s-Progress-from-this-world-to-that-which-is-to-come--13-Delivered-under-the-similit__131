@@ -40,7 +40,7 @@ deploy:
     - book.mobi
     - book.pdf
   "on":
-    repo: rdhyee/The-Pilgrim-s-Progress-from-this-world-to-that-which-is-to-come-Delivered-under-the-similitude-__131
+    repo: rdhyee/The-Pilgrim-s-Progress-from-this-world-to-that-which-is-to-come--13-Delivered-under-the-similit__131
 addons:
   apt:
     packages:
